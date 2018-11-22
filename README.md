@@ -33,3 +33,12 @@ follow phpsetup
 
 # kali virtualbox
 alias kali='/......./to/vbox-xhyu.sh'
+
+# nodeenv
+pip install --upgrade pip
+pip install nodeenv
+# active the virtualenv then:
+(py_env) $ nodeenv -p
+
+# qemu
+brew install qemu

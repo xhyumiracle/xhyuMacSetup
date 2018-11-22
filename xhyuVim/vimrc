@@ -1,0 +1,122 @@
+set nocompatible
+
+syntax on
+set showcmd
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+colorscheme desert
+
+map <F9> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+	exec "w"
+	if &filetype == 'c'
+		exec "!g++ % -o %<"
+		exec "! ./%<"
+	elseif &filetype == 'cpp'
+		exec "!g++ % -o %<"
+		exec "! ./%<"
+	elseif &filetype == 'java'
+		exec "!javac %"
+		exec "!java %<"
+	elseif &filetype == 'sh'
+		:!./%
+	elseif &filetype == 'python'
+		exec "!python %"
+	elseif &filetype == 'go'
+		exec "!go run %"
+	endif
+endfunc
+
+map <F8> :call Runlldb()<CR>
+func! Runlldb()
+	exec "w"
+	exec "!g++ % -g -o %<"
+	exec "!lldb ./%<"
+endfunc
+
+filetype on
+filetype plugin on
+filetype indent on
+
+set autoread
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+set completeopt=preview,menu
+
+filetype plugin on
+" set clipboard=unnamed
+set nobackup
+set autowrite
+set ruler
+set cursorline
+hi CursorLine ctermfg=grey ctermbg=237
+set cursorcolumn
+hi CursorColumn ctermfg=grey ctermbg=237
+set noeb
+set confirm
+set autoindent
+set cindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set smarttab
+set number
+set history=1000
+set noswapfile
+set ignorecase
+set hlsearch
+set incsearch
+set gdefault
+set enc=utf-8
+set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+set laststatus=2
+set cmdheight=2
+set viminfo+=!
+set iskeyword+=_,$,@,%,#
+set linespace=0
+set wildmenu
+set backspace=2
+set whichwrap+=<,>,h,l
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+set report=0
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+set showmatch
+set matchtime=1
+set scrolloff=3
+set smartindent
+au BufRead,BufNewFile *  setfiletype txt
+
+:inoremap ( ()<ESC>i
+:inoremap ) <c-r>=ClosePair(')')<CR>
+:inoremap [ []<ESC>i
+:inoremap ] <c-r>=ClosePair(']')<CR>
+:inoremap " ""<ESC>i
+:inoremap ' ''<ESC>i
+function! ClosePair(char)
+	if getline('.')[col('.') - 1] == a:char
+		return "\<Right>"
+	else
+		return a:char
+	endif
+endfunction
+filetype plugin indent on
+
+autocmd FileType python setlocal et sta sw=4 sts=8
+
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
+
+match ErrorMsg '\s\+$'
+
+set colorcolumn=121
+highlight ColorColumn ctermfg=grey ctermbg=233
+
+" au BufNewFile,BufRead *.cpp set syntax=cpp11
+" BufNewFile,BufRead *.cc set syntax=cpp11
+
+au! Syntax ragel source $HOME/.vim/ragel.vim
+au BufRead,BufNewFile *.rl set filetype=ragel
